@@ -3,7 +3,7 @@ export const mergeSort = (array) => {
   if (array.length <= 1) return array;
   const animations = [];
   merge(array, 0, array.length - 1, animations);
-  return animations;
+  return { animations: animations, array: array };
 };
 
 function merge(array, left, right, animations) {
@@ -20,7 +20,7 @@ function merge(array, left, right, animations) {
   }
 }
 
-function sort(array, left, middle, right) {
+function sort(array, left, middle, right, animations) {
   // Find sizes of arrays
   const n1 = middle - left + 1;
   const n2 = right - middle;
@@ -43,9 +43,9 @@ function sort(array, left, middle, right) {
   let k = left;
   while (i < n1 && j < n2) {
     // push the comparison indices to the comparison array twice
-    animations.push([i, j]);
+    animations.push([left + i, middle + 1 + j]);
     // once to change the color and then again to change the color back
-    animations.push([i, j]);
+    animations.push([left + i, middle + 1 + j]);
     if (leftArray[i] < rightArray[j]) {
       // we overwrite the value at pos k in the original array with the value
       // at position i in the left array
@@ -62,16 +62,22 @@ function sort(array, left, middle, right) {
   // Copy remaining elements if any
   while (i < n1) {
     // push the comparison indices to the comparison array twice
-    animations.push([i, i]);
+    animations.push([left + i, left + i]);
     // once to change the color and then again to change the color back
-    animations.push([i, i]);
+    animations.push([left + i, left + i]);
+    // we overwrite the value at pos k in the original array with the value
+    // at position i in the left array
+    animations.push([k, leftArray[i]]);
     array[k++] = leftArray[i++];
   }
   while (j < n2) {
     // push the comparison indices to the comparison array twice
-    animations.push([j, j]);
+    animations.push([middle + 1 + j, middle + 1 + j]);
     // once to change the color and then again to change the color back
-    animations.push([j, j]);
+    animations.push([middle + 1 + j, middle + 1 + j]);
+    // we overwrite the value at pos k in the original array with the value
+    // at position j in the right array
+    animations.push([k, rightArray[j]]);
     array[k++] = rightArray[j++];
   }
 }
