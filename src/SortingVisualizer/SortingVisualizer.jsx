@@ -2,19 +2,25 @@
 /* eslint-disable require-jsdoc */
 import React from "react";
 import { mergeSort } from "../SortingAlgorithms/MergeSort.js";
+import Slider from '@material-ui/core/Slider';
 
-// Speed of animation in milliseconds
-const ANIMATION_SPEED_MS = 25;
-
-// Number of bars
-const BAR_COUNT = 16;
+// Min and max bar count
+const MIN_BAR_COUNT = 10;
+const MAX_BAR_COUNT = 100;
 
 export default class SortingVisualizer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      // Array of bar heights
       array: [],
+
+      // Number of bars
+      barCount: 16,
+
+      // Speed of animation in milliseconds
+      animationSpeedMilli: 150
     };
   }
 
@@ -24,10 +30,17 @@ export default class SortingVisualizer extends React.Component {
 
   resetArray() {
     const array = [];
-    for (let i = 0; i < BAR_COUNT; i++) {
+    for (let i = 0; i < this.state.barCount; i++) {
       array.push(randomIntFromInterval(5, 100));
     }
     this.setState({ array });
+  }
+
+  setBarCountAndSpeed(count) {
+    this.setState({
+      barCount: count,
+      animationSpeedMilli: (1 - (count - 1)/MAX_BAR_COUNT) * 150
+    })
   }
 
   mergeSortAnimator() {
@@ -51,30 +64,19 @@ export default class SortingVisualizer extends React.Component {
           barTwo.classList.toggle("bg-indigo-700");
           // barOneStyle.backgroundColor = color;
           // barTwoStyle.backgroundColor = color;
-        }, i * ANIMATION_SPEED_MS);
+        }, i * this.state.animationSpeedMilli);
       } else {
         setTimeout(() => {
           const [barOneIdx, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOneIdx].style
           barOneStyle.height = `${newHeight}%`
-        }, i * ANIMATION_SPEED_MS);
+        }, i * this.state.animationSpeedMilli);
       }
     }
   }
-  
-  testSortingAlgorithms() {
-    const javaSortedArray = this.state.array
-    .slice()
-    .sort((a, b) => a - b);
-    const sortedArray = mergeSort(this.state.array, 0, this.state.array.length - 1).array;
-
-    // console.log(javaSortedArray);
-    // console.log(sortedArray);
-    console.log(arraysAreEqual(javaSortedArray, sortedArray));
-  }
 
   render() {
-    const { array } = this.state;
+    const { array, barCount } = this.state;
 
     return (
       <>
@@ -90,7 +92,22 @@ export default class SortingVisualizer extends React.Component {
         <div className="flex space-x-2">
           <button className="btn" onClick={() => {this.resetArray()}}>Generate New Arrary</button>
           <button className="btn" onClick={() => {this.mergeSortAnimator()}}>Merge Sort</button>
-          {/* <button className="btn" onClick={() => {this.testSortingAlgorithms()}}>Test Algorithms</button> */}
+        </div>
+        <div className="flex space-x-2 w-1/2 max-w-6xl">
+          <Slider
+            defaultValue={barCount}
+            getAriaValueText={valuetext}
+            aria-labelledby="discrete-bar-slider"
+            step={1}
+            min={MIN_BAR_COUNT}
+            max={MAX_BAR_COUNT}
+            valueLabelDisplay="auto"
+            marks={[
+              { value: MIN_BAR_COUNT, label: `${MIN_BAR_COUNT} Bars` }, 
+              { value: MAX_BAR_COUNT, label: `${MAX_BAR_COUNT} Bars` },
+            ]}
+            onChange={(event, value) => { this.setBarCountAndSpeed(value) }}
+          />
         </div>
       </>
     );
@@ -102,10 +119,7 @@ function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function arraysAreEqual(arrayOne, arrayTwo) {
-  if (arrayOne.length != arrayTwo.length) return false;
-  for (let i = 0; i < arrayOne.length; i++) {
-    if (arrayOne[i] != arrayTwo[i]) return false;
-  }
-  return true;
+// Used for slider
+function valuetext(value) {
+  return `${value} Bars`;
 }
