@@ -9,33 +9,46 @@ const MIN_BAR_COUNT = 10;
 const MAX_BAR_COUNT = 100;
 
 export default class SortingVisualizer extends React.Component {
+  // Constructor
   constructor(props) {
     super(props);
 
     this.state = {
       // Array of bar heights
       array: [],
-
+      // Array of timers for our animations
+      timers: [],
       // Number of bars
       barCount: 16,
-
       // Speed of animation in milliseconds
       animationSpeedMilli: 150
     };
   }
 
+  // Triggered when the component mounts
   componentDidMount() {
     this.resetArray();
   }
 
+  // Helper function to reset the array
   resetArray() {
+    // Clear timers for previous animations
+    this.state.timers.forEach(timer => {
+      clearTimeout(timer);
+    });
+    // Reseed bar heights
     const array = [];
     for (let i = 0; i < this.state.barCount; i++) {
       array.push(randomIntFromInterval(5, 100));
     }
-    this.setState({ array });
+    // Set state
+    this.setState({
+      timers: [],
+      array: array
+    });
   }
 
+  // Helper function to change the bar count and animation speed
   setBarCountAndSpeed(count) {
     this.setState({
       barCount: count,
@@ -43,6 +56,7 @@ export default class SortingVisualizer extends React.Component {
     })
   }
 
+  // Helper function to control merge sort animation
   mergeSortAnimator() {
     const animations = mergeSort(this.state.array).animations;
     for (let i = 0; i < animations.length; i++) {
@@ -56,20 +70,23 @@ export default class SortingVisualizer extends React.Component {
         const [barOneIdx, barTwoIdx] = animations[i];
         const barOne = arrayBars[barOneIdx];
         const barTwo = arrayBars[barTwoIdx];
-        setTimeout(() => {
+        const timer = () => setTimeout(() => {
           barOne.classList.toggle("bg-indigo-700");
           if (barOne !== barTwo) barTwo.classList.toggle("bg-indigo-700");
         }, i * this.state.animationSpeedMilli);
+        this.state.timers.push(timer());
       } else {
-        setTimeout(() => {
+        const timer = () => setTimeout(() => {
           const [barOneIdx, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOneIdx].style
           barOneStyle.height = `${newHeight}%`
         }, i * this.state.animationSpeedMilli);
+        this.state.timers.push(timer());
       }
     }
   }
 
+  // Controls what renders the screen
   render() {
     const { array, barCount } = this.state;
 
@@ -91,7 +108,7 @@ export default class SortingVisualizer extends React.Component {
         <div className="flex space-x-2 w-1/2 max-w-6xl">
           <Slider
             defaultValue={barCount}
-            getAriaValueText={valuetext}
+            getAriaValueText={(value) => {return `${value} Bars`;}}
             aria-labelledby="discrete-bar-slider"
             step={1}
             min={MIN_BAR_COUNT}
@@ -112,9 +129,4 @@ export default class SortingVisualizer extends React.Component {
 // From Stack Overflow
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-// Used for slider
-function valuetext(value) {
-  return `${value} Bars`;
 }
