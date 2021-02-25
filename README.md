@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# Sorting Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple merge sort visualizer built with React and Tailwind. Hosted [here](https://mikeyroush.com/sorting-visualizer/).
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+These instructions will outline the steps I went through to create this project.
 
-### `yarn start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- A working command line
+- Node >= 10.16
+- npm >= 5.6
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### React Configuration
 
-### `yarn test`
+To create a new React app, run the following commands:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```console
+foo@bar:~$ npx create-react-app my-app
+foo@bar:~$ cd my-app
+```
 
-### `yarn build`
+To add Material UI components to your project, like a slider, run the following command:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```console
+foo@bar:~$ npm install @material-ui/core
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To change the default title and icon of the page, go to ```./public```,
+This contains index.html and favicon.ico, which control the title and icon of the page, respectively. 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### ESLint and Prettier Configuration
 
-### `yarn eject`
+To add ESLint and Prettier to your project, run the following commands:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```console
+foo@bar:~$ npm install -g prettier eslint
+foo@bar:~$ eslint —init
+foo@bar:~$ npm install --save-dev eslint-config-prettier eslint-plugin-prettier
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### TailwindCSS Configuration
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To add TailwindCSS to your project, run the following commands:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```console
+foo@bar:~$ npm install -D tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+foo@bar:~$ npm install @craco/craco
+foo@bar:~$ npx tailwindcss init 
+```
 
-## Learn More
+The last command shown above adds a file called tailwind.config.js to your root direcotry. Change the ```purge``` line of the file to match the following in oder to remove unused CSS from your production builds for maximum performance.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### GitHub Pages Configuration
 
-### Code Splitting
+To easily deploy static pages to GitHub Pages, run the following command:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```console
+foo@bar:~$ npm install gh-pages --save-dev
+```
 
-### Analyzing the Bundle Size
+Then, add the following scripts to your Package.json:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```json
+"scripts": {
+  //...
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+}
+```
 
-### Making a Progressive Web App
+Finally, add a homepage to your Package.json and run ```npm run deploy``` when you are ready to deploy your project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```json
+"homepage": "http://gitname.github.io/react-gh-pages"
+```
 
-### Advanced Configuration
+## Authors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* **Michael Roush** - *Project completion*
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Copyright © 2021 Michael Roush. All rights reserved.
