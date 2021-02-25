@@ -36,6 +36,11 @@ export default class SortingVisualizer extends React.Component {
     this.state.timers.forEach(timer => {
       clearTimeout(timer);
     });
+    // Remove active color from bars if they got stuck in transition
+    const arrayBars = document.getElementsByClassName('array-bar');
+    Array.from(arrayBars).forEach(bar => {
+      bar.classList.remove("bg-indigo-700");
+    });
     // Reseed bar heights
     const array = [];
     for (let i = 0; i < this.state.barCount; i++) {

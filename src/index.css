@@ -5,10 +5,10 @@
 
 @layer components {
 	.App {
-		@apply h-screen w-screen flex flex-col items-center space-y-4 justify-center bg-indigo-300;
+		@apply h-screen w-screen flex flex-col items-center space-y-4 justify-center bg-indigo-300 p-1 sm:p-0;
 	}
 	.array-container {
-		@apply h-5/6 w-5/6 pt-1 px-2 lg:px-4 rounded shadow-sm grid grid-flow-col bg-indigo-500 gap-1 items-end;
+		@apply h-5/6 w-full sm:w-5/6 pt-1 px-2 lg:px-4 rounded shadow-sm grid grid-flow-col bg-indigo-500 gap-1 items-end;
 	}
 	.array-bar {
 		@apply bg-indigo-300 rounded-t-sm;
