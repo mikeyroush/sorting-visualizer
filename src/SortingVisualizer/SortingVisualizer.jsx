@@ -32,15 +32,7 @@ export default class SortingVisualizer extends React.Component {
 
   // Helper function to reset the array
   resetArray() {
-    // Clear timers for previous animations
-    this.state.timers.forEach(timer => {
-      clearTimeout(timer);
-    });
-    // Remove active color from bars if they got stuck in transition
-    const arrayBars = document.getElementsByClassName('array-bar');
-    Array.from(arrayBars).forEach(bar => {
-      bar.classList.remove("bg-indigo-700");
-    });
+    this.stopAnimation();
     // Reseed bar heights
     const array = [];
     for (let i = 0; i < this.state.barCount; i++) {
@@ -55,10 +47,25 @@ export default class SortingVisualizer extends React.Component {
 
   // Helper function to change the bar count and animation speed
   setBarCountAndSpeed(count) {
+    this.stopAnimation();
     this.setState({
       barCount: count,
       animationSpeedMilli: (1 - (count - 1)/MAX_BAR_COUNT) * 150
     })
+  }
+
+  // Stop animation
+  stopAnimation() {
+    // Clear timers for previous animations
+    this.state.timers.forEach(timer => {
+      clearTimeout(timer);
+    });
+
+    // Remove active color from bars if they got stuck in transition
+    const arrayBars = document.getElementsByClassName('array-bar');
+    Array.from(arrayBars).forEach(bar => {
+      bar.classList.remove("bg-indigo-700");
+    });
   }
 
   // Helper function to control merge sort animation
@@ -112,7 +119,8 @@ export default class SortingVisualizer extends React.Component {
         </div>
         <div className="flex space-x-2 w-1/2 max-w-6xl">
           <Slider
-            defaultValue={barCount}
+            // key={`slider-${barCount}`}
+            value={barCount}
             getAriaValueText={(value) => {return `${value} Bars`;}}
             aria-labelledby="discrete-bar-slider"
             step={1}
